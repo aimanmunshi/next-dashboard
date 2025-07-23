@@ -14,6 +14,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 import { googleProvider, auth } from "@/lib/firebase";
 import { githubProvider } from "@/lib/firebase";
+import {signInWithRedirect} from "firebase/auth"; // Import for GitHub login
 
 export function LoginForm({
   className,
@@ -28,22 +29,25 @@ export function LoginForm({
   const router = useRouter();
 
   const handleGoogleLogin = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Google login error:", error);
-    }
-  };
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const token = await result.user.getIdToken(); // ✅ Get token
+    localStorage.setItem("token", token);         // ✅ Store token
+    router.push("/dashboard");                    // ✅ Redirect
+  } catch (error) {
+    console.error("Google login error:", error);
+  }
+};
+
 
   const handleGitHubLogin = async () => {
     try {
-      await signInWithPopup(auth, githubProvider);
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("GitHub login error:", error);
-    }
-  };
+    await signInWithRedirect(auth, githubProvider);
+    // Token logic will be handled in the redirect callback (e.g., in useEffect or page mount)
+  } catch (error) {
+    console.error("GitHub login error:", error);
+  }
+};
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

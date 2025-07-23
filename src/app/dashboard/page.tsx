@@ -7,10 +7,12 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/components/mode-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function Page() {
 
   return (
+    
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
