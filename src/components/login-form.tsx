@@ -14,7 +14,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 import { googleProvider, auth } from "@/lib/firebase";
 import { githubProvider } from "@/lib/firebase";
-import {signInWithRedirect} from "firebase/auth"; // Import for GitHub login
+import { signInWithRedirect } from "firebase/auth"; // Import for GitHub login
 
 export function LoginForm({
   className,
@@ -29,27 +29,26 @@ export function LoginForm({
   const router = useRouter();
 
   const handleGoogleLogin = async () => {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    const token = await result.user.getIdToken(); // ✅ Get token
-    localStorage.setItem("token", token);         // ✅ Store token
-    router.push("/dashboard");                    // ✅ Redirect
-  } catch (error) {
-    console.error("Google login error:", error);
-  }
-};
-
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const token = await result.user.getIdToken(); // ✅ Get token
+      localStorage.setItem("token", token); // ✅ Store token
+      router.push("/dashboard"); // ✅ Redirect
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
+  };
 
   const handleGitHubLogin = async () => {
     try {
-    const result = await signInWithPopup(auth, githubProvider); // Use GitHub provider
-    const token = await result.user.getIdToken();               // ✅ Get Firebase token
-    localStorage.setItem("token", token);                       // ✅ Store token
-    router.push("/dashboard");                                  // ✅ Redirect
-  } catch (error) {
-    console.error("GitHub login error:", error);
-  }
-};
+      const result = await signInWithPopup(auth, githubProvider); // Use GitHub provider
+      const token = await result.user.getIdToken(); // ✅ Get Firebase token
+      localStorage.setItem("token", token); // ✅ Store token
+      router.push("/dashboard"); // ✅ Redirect
+    } catch (error) {
+      console.error("GitHub login error:", error);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,9 +70,14 @@ export function LoginForm({
 
       // ✅ Redirect to dashboard
       router.push("/dashboard");
-    } catch (err: any) {
-      console.error(err);
-      setError("Invalid email or password");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        setError(err.message); // Or a custom message like: "Invalid email or password"
+      } else {
+        console.error("Unknown error", err);
+        setError("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }
@@ -101,11 +105,10 @@ export function LoginForm({
 
                 <div className="grid gap-6">
                   <div className="grid gap-3">
-                    <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="xyz@example.com"
+                      placeholder="Email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -113,14 +116,12 @@ export function LoginForm({
                   </div>
 
                   <div className="grid gap-3">
-                    <div className="flex items-center">
-                      <Label htmlFor="password">Password</Label>
-                    </div>
+                    <div className="flex items-center"></div>
                     <div className="relative">
                       <Input
                         id="password"
                         type={showPassword ? "text" : "password"}
-                        placeholder="*********" // Placeholder text for password input, can be adjusted as
+                        placeholder="Password" // Placeholder text for password input, can be adjusted as
                         required
                         className="pr-10"
                         value={password}

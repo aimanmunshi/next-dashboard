@@ -30,9 +30,14 @@ export function SignupForm({
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       router.push("/login");
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Signup failed");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        setError(err.message); // Or a custom message like: "Invalid email or password"
+      } else {
+        console.error("Unknown error", err);
+        setError("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }
