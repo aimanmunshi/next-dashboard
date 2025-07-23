@@ -42,8 +42,10 @@ export function LoginForm({
 
   const handleGitHubLogin = async () => {
     try {
-    await signInWithRedirect(auth, githubProvider);
-    // Token logic will be handled in the redirect callback (e.g., in useEffect or page mount)
+    const result = await signInWithPopup(auth, githubProvider); // Use GitHub provider
+    const token = await result.user.getIdToken();               // ✅ Get Firebase token
+    localStorage.setItem("token", token);                       // ✅ Store token
+    router.push("/dashboard");                                  // ✅ Redirect
   } catch (error) {
     console.error("GitHub login error:", error);
   }
