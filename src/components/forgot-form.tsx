@@ -33,11 +33,11 @@ export function ForgotForm({
               
               <div className="grid gap-6">
                 <div className="grid gap-3">
-                  <Label htmlFor="email">Email</Label>
+                  
                   <Input
                     id="email"
                     type="email"
-                    placeholder="xyz@example.com"
+                    placeholder="Email"
                     required
                   />
                 </div>

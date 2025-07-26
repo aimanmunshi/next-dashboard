@@ -57,11 +57,11 @@ export function SignupForm({
               )}
 
               <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
+                
                 <Input
                   id="email"
                   type="email"
-                  placeholder="xyz@example.com"
+                  placeholder="Email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -70,10 +70,11 @@ export function SignupForm({
 
               <div className="grid gap-3">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  
                 </div>
                 <div className="relative">
                   <Input
+                    placeholder="Password"
                     id="password"
                     type={showPassword ? "text" : "password"}
                     required
