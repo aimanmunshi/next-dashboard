@@ -15,6 +15,9 @@ import { signInWithPopup } from "firebase/auth";
 import { googleProvider, auth } from "@/lib/firebase";
 import { githubProvider } from "@/lib/firebase";
 import { signInWithRedirect } from "firebase/auth"; // Import for GitHub login
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { saveUserToFirestore } from "@/lib/firestore-helpers"; // 👈 Add this
 
 export function LoginForm({
   className,
@@ -31,9 +34,16 @@ export function LoginForm({
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const token = await result.user.getIdToken(); // ✅ Get token
-      localStorage.setItem("token", token); // ✅ Store token
-      router.push("/dashboard"); // ✅ Redirect
+      const token = await result.user.getIdToken();
+      localStorage.setItem("token", token);
+
+      // ✅ Save user to Firestore
+      const { uid, displayName, email } = result.user;
+      if (email && displayName) {
+        await saveUserToFirestore(uid, displayName, email);
+      }
+
+      router.push("/dashboard");
     } catch (error) {
       console.error("Google login error:", error);
     }
@@ -91,9 +101,7 @@ export function LoginForm({
 
       <div className={cn("flex flex-col gap-6", className)} {...props}>
         <Card>
-          <CardHeader className="text-center">
-            
-          </CardHeader>
+          <CardHeader className="text-center"></CardHeader>
           <CardContent>
             <form onSubmit={handleLogin}>
               <div className="grid gap-6">
