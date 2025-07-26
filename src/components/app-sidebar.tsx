@@ -35,103 +35,103 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Team A",
       logo: GalleryVerticalEnd,
       plan: "Enterprise",
     },
     {
-      name: "Acme Corp.",
+      name: "Team B",
       logo: AudioWaveform,
       plan: "Startup",
     },
     {
-      name: "Evil Corp.",
+      name: "Team C",
       logo: Command,
       plan: "Free",
     },
   ],
   navMain: [
     {
-      title: "Playground",
+      title: "Service A",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
+          title: "Option 1",
           url: "#",
         },
         {
-          title: "Starred",
+          title: "Option 2",
           url: "#",
         },
         {
-          title: "Settings",
+          title: "Option 3",
           url: "#",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Service B",
       url: "#",
       icon: Bot,
       items: [
         {
-          title: "Genesis",
+          title: "Option 1",
           url: "#",
         },
         {
-          title: "Explorer",
+          title: "Option 2",
           url: "#",
         },
         {
-          title: "Quantum",
+          title: "Option 3",
           url: "#",
         },
       ],
     },
     {
-      title: "Documentation",
+      title: "Service C",
       url: "#",
       icon: BookOpen,
       items: [
         {
-          title: "Introduction",
+          title: "Option 1",
           url: "#",
         },
         {
-          title: "Get Started",
+          title: "Option 2",
           url: "#",
         },
         {
-          title: "Tutorials",
+          title: "Option 3",
           url: "#",
         },
         {
-          title: "Changelog",
+          title: "Option 4",
           url: "#",
         },
       ],
     },
     {
-      title: "Settings",
+      title: "Service D",
       url: "#",
       icon: Settings2,
       items: [
         {
-          title: "General",
+          title: "Option 1",
           url: "#",
         },
         {
-          title: "Team",
+          title: "Option 2",
           url: "#",
         },
         {
-          title: "Billing",
+          title: "Option 3",
           url: "#",
         },
         {
-          title: "Limits",
+          title: "Option 4",
           url: "#",
         },
       ],
@@ -139,17 +139,17 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Project A",
       url: "#",
       icon: Frame,
     },
     {
-      name: "Sales & Marketing",
+      name: "Project B",
       url: "#",
       icon: PieChart,
     },
     {
-      name: "Travel",
+      name: "Project C",
       url: "#",
       icon: Map,
     },
