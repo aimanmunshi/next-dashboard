@@ -8,14 +8,16 @@ import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { saveUserToFirestore } from "@/lib/firestore-helpers";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const [showPassword, setShowPassword] = useState(false);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,25 +25,29 @@ export function SignupForm({
   const router = useRouter();
 
   const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/login");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error(err);
-        setError(err.message); // Or a custom message like: "Invalid email or password"
-      } else {
-        console.error("Unknown error", err);
-        setError("An unknown error occurred");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+
+    // ✅ Update Firebase auth profile with name
+    await updateProfile(result.user, {
+      displayName: name,
+    });
+
+    // ✅ Save user to Firestore
+    await saveUserToFirestore(result.user.uid, name, email);
+
+    router.push("/dashboard");
+  } catch (err) {
+    console.error(err);
+    setError("Signup failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -57,6 +63,20 @@ export function SignupForm({
               )}
 
               <div className="grid gap-3">
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="Name"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+
+              <div className="grid gap-3">
+                <div className="flex items-center">
+                  
+                </div>
                 
                 <Input
                   id="email"
@@ -67,6 +87,7 @@ export function SignupForm({
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
+              
 
               <div className="grid gap-3">
                 <div className="flex items-center">

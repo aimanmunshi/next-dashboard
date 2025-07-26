@@ -11,7 +11,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, GithubAuthProvider } from "firebase/auth";
 import { googleProvider, auth } from "@/lib/firebase";
 import { githubProvider } from "@/lib/firebase";
 import { signInWithRedirect } from "firebase/auth"; // Import for GitHub login
@@ -26,6 +26,7 @@ export function LoginForm({
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState(""); // 👈 Add this line
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -49,16 +50,49 @@ export function LoginForm({
     }
   };
 
+  const githubProvider = new GithubAuthProvider();
+githubProvider.setCustomParameters({
+  allow_signup: "false", // optional, prevent new account creation
+  prompt: "consent",      // 👈 forces popup every time
+});
+
   const handleGitHubLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, githubProvider); // Use GitHub provider
-      const token = await result.user.getIdToken(); // ✅ Get Firebase token
-      localStorage.setItem("token", token); // ✅ Store token
-      router.push("/dashboard"); // ✅ Redirect
-    } catch (error) {
-      console.error("GitHub login error:", error);
+    const result = await signInWithPopup(auth, githubProvider);
+    const token = await result.user.getIdToken();
+    localStorage.setItem("token", token);
+
+    const { uid, email } = result.user;
+    let displayName = result.user.displayName;
+
+    // ⬇️ Fetch full GitHub profile name using access token
+    const credential = GithubAuthProvider.credentialFromResult(result);
+    const accessToken = credential?.accessToken;
+
+    if (accessToken) {
+      const response = await fetch("https://api.github.com/user", {
+        headers: {
+          Authorization: `token ${accessToken}`,
+        },
+      });
+      const githubData = await response.json();
+
+      // If GitHub name exists, use it instead of fallback
+      if (githubData?.name) {
+        displayName = githubData.name;
+      }
     }
-  };
+
+    // ✅ Save correct name & email to Firestore
+    if (email && displayName) {
+      await saveUserToFirestore(uid, displayName, email);
+    }
+
+    router.push("/dashboard");
+  } catch (error) {
+    console.error("GitHub login error:", error);
+  }
+};
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,6 +146,8 @@ export function LoginForm({
                 </div>
 
                 <div className="grid gap-3">
+                  
+                  <div className="flex items-center"></div>
                   <div className="grid gap-3">
                     <Input
                       id="email"
