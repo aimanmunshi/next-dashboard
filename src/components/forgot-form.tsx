@@ -27,8 +27,10 @@ export function ForgotForm({
     try {
       await sendPasswordResetEmail(auth, email);
       setSuccess("✅ Password reset email sent. Check your inbox.");
-    } catch (err: any) {
-      setError(err.message || "❌ Failed to send reset email.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Reset error:", err.message);
+      }
     } finally {
       setLoading(false);
     }
