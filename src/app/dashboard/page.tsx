@@ -18,22 +18,103 @@ import {
 import { ModeToggle } from "@/components/mode-toggle";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { Folder, Wrench, Clock } from "lucide-react";
-import { useEffect, useState } from "react"
-import { getAuth, onAuthStateChanged } from "firebase/auth"
+import { useEffect, useState } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { ShieldCheck } from "lucide-react";
+import { CalendarClock } from "lucide-react";
+import { LogIn } from "lucide-react";
 
 export default function Page() {
   const [userName, setUserName] = useState<string>("User");
+  const [authProvider, setAuthProvider] = useState<string>("Unknown");
+  const [accountCreated, setAccountCreated] = useState<string>("—");
+  const [lastLogin, setLastLogin] = useState<string>("—");
+  const [location, setLocation] = useState<{ lat: number; lon: number } | null>(
+    null
+  );
+  const [weather, setWeather] = useState<{ temp: number; city: string } | null>(
+    null
+  );
 
   useEffect(() => {
-    const auth = getAuth()
+    if (location) {
+      const fetchWeather = async () => {
+        try {
+          const apiKey = "4d5ddadf305370278b94d75de4fa9a73"; // replace with your actual key
+          const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=$4d5ddadf305370278b94d75de4fa9a7}&units=metric`
+          );
+          const data = await response.json();
+          setWeather({
+            temp: data.main.temp,
+            city: data.name,
+          });
+        } catch (error) {
+          console.error("Failed to fetch weather:", error);
+        }
+      };
+
+      fetchWeather();
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation not supported");
+    }
+  }, []);
+
+  useEffect(() => {
+    const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Prefer displayName, fallback to email
-        setUserName(user.displayName || user.email?.split("@")[0] || "User")
+        setUserName(user.displayName || user.email?.split("@")[0] || "User");
+
+        const providerId = user.providerData[0]?.providerId || "unknown";
+        let readableProvider = providerId;
+        if (providerId === "google.com") readableProvider = "Google";
+        else if (providerId === "password") readableProvider = "Email";
+        else if (providerId === "github.com") readableProvider = "GitHub";
+        setAuthProvider(readableProvider);
+
+        // ✅ Get creation date
+        const creationTime = user.metadata?.creationTime;
+        if (creationTime) {
+          const date = new Date(creationTime);
+          const formatted = date.toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+          setAccountCreated(formatted);
+        }
+        const lastLoginTime = user.metadata?.lastSignInTime;
+        if (lastLoginTime) {
+          const date = new Date(lastLoginTime);
+          const formatted = date.toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+          setLastLogin(formatted);
+        }
       }
-    })
-    return () => unsubscribe()
-  }, [])
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -76,13 +157,29 @@ export default function Page() {
           </p>
           {/* KPI Cards */}
           <div className="grid gap-4 md:grid-cols-3">
-            <KpiCard title="" value="" icon={null} subtext="" />
-            <KpiCard title="" value="" icon={null} subtext="" />
-            <KpiCard title="" value="" icon={null} subtext="" />
+            <KpiCard
+              title="Account Created"
+              value={accountCreated}
+              icon={<CalendarClock />}
+              subtext="User registration date"
+            />
+
+            <KpiCard
+              title="Auth Provider"
+              value={authProvider}
+              icon={<ShieldCheck />}
+              subtext="via Firebase"
+            />
+
+            <KpiCard
+              title="Last Login"
+              value={lastLogin}
+              icon={<LogIn />}
+              subtext="Previous session timestamp"
+            />
           </div>
           {/* Main Analytics Panel */}
           <div className="bg-muted/50 min-h-[470px] rounded-xl" />
-
         </div>
       </SidebarInset>
     </SidebarProvider>
