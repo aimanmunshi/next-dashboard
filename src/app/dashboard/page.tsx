@@ -18,8 +18,22 @@ import {
 import { ModeToggle } from "@/components/mode-toggle";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { Folder, Wrench, Clock } from "lucide-react";
+import { useEffect, useState } from "react"
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 export default function Page() {
+  const [userName, setUserName] = useState<string>("User");
+
+  useEffect(() => {
+    const auth = getAuth()
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Prefer displayName, fallback to email
+        setUserName(user.displayName || user.email?.split("@")[0] || "User")
+      }
+    })
+    return () => unsubscribe()
+  }, [])
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -53,20 +67,22 @@ export default function Page() {
         </header>
 
         {/* Content */}
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-           <div>
-    <h1 className="text-2xl font-semibold tracking-tight">Welcome back, Aiman 👋</h1>
-    <p className="text-sm text-muted-foreground">Here’s a quick overview of your dashboard</p>
-  </div>
+        <div className="flex flex-col gap-4 p-4">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Welcome back, {userName} 👋
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Here’s a quick overview of your dashboard
+          </p>
           {/* KPI Cards */}
           <div className="grid gap-4 md:grid-cols-3">
             <KpiCard title="" value="" icon={null} subtext="" />
             <KpiCard title="" value="" icon={null} subtext="" />
             <KpiCard title="" value="" icon={null} subtext="" />
           </div>
-
           {/* Main Analytics Panel */}
-          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+          <div className="bg-muted/50 min-h-[470px] rounded-xl" />
+
         </div>
       </SidebarInset>
     </SidebarProvider>
