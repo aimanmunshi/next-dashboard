@@ -29,52 +29,7 @@ export default function Page() {
   const [authProvider, setAuthProvider] = useState<string>("Unknown");
   const [accountCreated, setAccountCreated] = useState<string>("—");
   const [lastLogin, setLastLogin] = useState<string>("—");
-  const [location, setLocation] = useState<{ lat: number; lon: number } | null>(
-    null
-  );
-  const [weather, setWeather] = useState<{ temp: number; city: string } | null>(
-    null
-  );
-
-  useEffect(() => {
-    if (location) {
-      const fetchWeather = async () => {
-        try {
-          const apiKey = "4d5ddadf305370278b94d75de4fa9a73"; // replace with your actual key
-          const response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=$4d5ddadf305370278b94d75de4fa9a7}&units=metric`
-          );
-          const data = await response.json();
-          setWeather({
-            temp: data.main.temp,
-            city: data.name,
-          });
-        } catch (error) {
-          console.error("Failed to fetch weather:", error);
-        }
-      };
-
-      fetchWeather();
-    }
-  }, [location]);
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-        }
-      );
-    } else {
-      console.error("Geolocation not supported");
-    }
-  }, []);
+  
 
   useEffect(() => {
     const auth = getAuth();
