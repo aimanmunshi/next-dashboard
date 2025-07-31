@@ -47,7 +47,7 @@ export type Task = {
   title: string;
   status: "Pending" | "In Progress" | "Completed";
   uid: string;
-  createdAt?: any; // Optional: Firestore timestamp (or use `Timestamp` from `firebase/firestore`)
+  createdAt?: Date; // Optional: Firestore timestamp (or use `Timestamp` from `firebase/firestore`)
 };
 
 export default function Page() {

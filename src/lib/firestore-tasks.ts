@@ -7,7 +7,7 @@ export interface Task {
   title: string;
   status: "Pending" | "In Progress" | "Completed";
   uid: string;
-  createdAt?: any;
+  createdAt?: Date; // Optional: Firestore timestamp (or use `Timestamp` from `firebase/firestore`)
 }
 
 // 1️⃣ Get all tasks for a user
