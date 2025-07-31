@@ -31,12 +31,25 @@ import {
 } from "@/lib/firestore-tasks";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase"; // adjust path if needed
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreVertical } from "lucide-react";
 
-type Task = {
-  id: number;
+export type Task = {
+  id: string;
   title: string;
   status: "Pending" | "In Progress" | "Completed";
+  uid: string;
+  createdAt?: any; // Optional: Firestore timestamp (or use `Timestamp` from `firebase/firestore`)
 };
+
 
 export default function Page() {
   const [userName, setUserName] = useState<string>("User");
@@ -48,6 +61,9 @@ export default function Page() {
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const auth = getAuth();
   const user = getAuth().currentUser;
+  const [newTaskStatus, setNewTaskStatus] = useState<
+    "Pending" | "In Progress" | "Completed"
+  >("Pending");
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -205,10 +221,7 @@ export default function Page() {
           <div className="rounded-xl bg-muted/40 p-4 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-lg font-semibold">📝 Tasks</h3>
-                <p className="text-sm text-muted-foreground">
-                  Track your to-dos.
-                </p>
+                <h3 className="text-lg font-semibold">Tasks</h3>
               </div>
               <div className="flex gap-2">
                 <input
@@ -216,14 +229,42 @@ export default function Page() {
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
                   className="text-sm rounded-md border px-3 py-1 bg-background text-foreground"
-                  placeholder="New task title"
+                  placeholder="New task"
                 />
-                <button
-                  onClick={handleAddTask}
-                  className="bg-primary text-black px-3 py-1 text-sm rounded-md"
-                >
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-36 justify-between"
+                      
+                    >
+                      {newTaskStatus}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem
+                      onClick={() => setNewTaskStatus("Pending")}
+                    >
+                      Pending
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setNewTaskStatus("In Progress")}
+                    >
+                      In Progress
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setNewTaskStatus("Completed")}
+                    >
+                      Completed
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <Button onClick={handleAddTask} className="px-2 py-1 text-sm">
                   Add
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -251,12 +292,29 @@ export default function Page() {
                       </td>
                       <td className="py-2 px-3">{task.title}</td>
                       <td className="py-2 px-3 text-right">
-                        <button
-                          onClick={() => handleDelete(task.id)}
-                          className="text-sm text-muted-foreground hover:text-red-500"
-                        >
-                          Delete
-                        </button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="text-sm text-muted-foreground hover:text-foreground">
+                              <MoreVertical className="h-4 w-4" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleToggleStatus(task.id, task.status)
+                              }
+                            >
+                              Toggle Status
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleDelete(task.id)}
+                              className="text-red-500 focus:text-red-600"
+                            >
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </td>
                     </tr>
                   ))}

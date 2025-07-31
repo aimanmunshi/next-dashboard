@@ -27,7 +27,7 @@ export async function getTasks(uid: string): Promise<Task[]> {
 export async function addTask(uid: string, title: string): Promise<string> {
   const docRef = await addDoc(collection(db, "tasks"), {
     title,
-    status: "Pending",
+    status,
     uid,
     createdAt: serverTimestamp(),
   });
