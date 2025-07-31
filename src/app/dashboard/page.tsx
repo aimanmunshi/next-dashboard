@@ -50,14 +50,13 @@ export type Task = {
   createdAt?: any; // Optional: Firestore timestamp (or use `Timestamp` from `firebase/firestore`)
 };
 
-
 export default function Page() {
   const [userName, setUserName] = useState<string>("User");
   const [authProvider, setAuthProvider] = useState<string>("Unknown");
   const [accountCreated, setAccountCreated] = useState<string>("—");
   const [lastLogin, setLastLogin] = useState<string>("—");
   const [newTask, setNewTask] = useState("");
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const auth = getAuth();
   const user = getAuth().currentUser;
@@ -238,7 +237,6 @@ export default function Page() {
                       variant="outline"
                       size="sm"
                       className="w-36 justify-between"
-                      
                     >
                       {newTaskStatus}
                     </Button>
