@@ -321,29 +321,28 @@ export default function Page() {
               </table>
             </div>
 
-            <div className="text-xs text-muted-foreground mt-3">
-              {tasks.length} task(s) listed.
-              <Button
-                variant="destructive"
-                onClick={async () => {
-                  const user = getAuth().currentUser;
-                  if (!user) return;
-                  const confirmed = confirm(
-                    "Are you sure you want to delete all tasks?"
-                  );
-                  if (!confirmed) return;
+            <div className="text-xs text-muted-foreground mt-3 flex items-center justify-between">
+  <span>{tasks.length} task(s) listed.</span>
+  <Button
+    variant="destructive"
+    size="sm"
+    onClick={async () => {
+      const user = getAuth().currentUser;
+      if (!user) return;
+      const confirmed = confirm("Are you sure you want to delete all tasks?");
+      if (!confirmed) return;
 
-                  try {
-                    await deleteAllTasksForUser(user.uid);
-                    setTasks([]); // clear local state
-                  } catch (err) {
-                    console.error("Error deleting all tasks:", err);
-                  }
-                }}
-              >
-                Delete All Tasks
-              </Button>
-            </div>
+      try {
+        await deleteAllTasksForUser(user.uid);
+        setTasks([]); // clear local state
+      } catch (err) {
+        console.error("Error deleting all tasks:", err);
+      }
+    }}
+  >
+    Delete All Tasks
+  </Button>
+</div>
           </div>
         </div>
       </SidebarInset>
