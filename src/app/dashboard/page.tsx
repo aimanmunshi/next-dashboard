@@ -42,9 +42,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
 import { deleteAllTasksForUser } from "@/lib/firestore-tasks";
-import { CircleEllipsis } from 'lucide-react';
-import { Input } from "@/components/ui/input"
-
+import { CircleEllipsis } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export type Task = {
   id: string;
@@ -274,49 +273,38 @@ export default function Page() {
               <table className="min-w-full text-sm">
                 <thead>
                   <tr className="text-muted-foreground border-b">
-                    <th className="py-2 px-3 text-left">Status</th>
-                    <th className="py-2 px-3 text-left">Task</th>
+                    <th className="py-2 px-3 text-left w-24">Status</th>
+                    <th className="py-2 px-3 text-left w-64">Task</th>
                     <th className="py-2 px-3 text-right">Actions</th>
                   </tr>
                 </thead>
+
                 <tbody>
                   {tasks.map((task) => (
                     <tr key={task.id} className="border-b hover:bg-muted/20">
-                      <td className="py-2 px-3">
-                        <button
+                      <td className="py-2 px-3 w-24 max-w-[6rem] whitespace-nowrap overflow-hidden text-ellipsis text-right">
+                        <Button
+                          variant="ghost"
                           onClick={() =>
                             handleToggleStatus(task.id, task.status)
                           }
-                          className="text-xs font-medium"
+                          className="text-xs font-medium w-full truncate"
                         >
                           {task.status}
-                        </button>
+                        </Button>
                       </td>
-                      <td className="py-2 px-3">{task.title}</td>
+
+                      <td className="py-2 px-3 w-64 max-w-[16rem] whitespace-nowrap overflow-hidden text-ellipsis">
+                        {task.title}
+                      </td>
+
                       <td className="py-2 px-3 text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button className="text-sm text-muted-foreground hover:text-foreground">
-                              <CircleEllipsis className="h-4 w-4" />
-                            </button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleToggleStatus(task.id, task.status)
-                              }
-                            >
-                              Toggle Status
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(task.id)}
-                              className="text-red-500 focus:text-red-600"
-                            >
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <button
+                          onClick={() => handleDelete(task.id)}
+                          className="text-sm text-muted-foreground hover:text-red-500"
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -325,27 +313,29 @@ export default function Page() {
             </div>
 
             <div className="text-xs text-muted-foreground mt-3 flex items-center justify-between">
-  <span>{tasks.length} task(s) listed.</span>
-  <Button
-    variant="destructive"
-    size="sm"
-    onClick={async () => {
-      const user = getAuth().currentUser;
-      if (!user) return;
-      const confirmed = confirm("Are you sure you want to delete all tasks?");
-      if (!confirmed) return;
+              <span>{tasks.length} task(s) listed.</span>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={async () => {
+                  const user = getAuth().currentUser;
+                  if (!user) return;
+                  const confirmed = confirm(
+                    "Are you sure you want to delete all tasks?"
+                  );
+                  if (!confirmed) return;
 
-      try {
-        await deleteAllTasksForUser(user.uid);
-        setTasks([]); // clear local state
-      } catch (err) {
-        console.error("Error deleting all tasks:", err);
-      }
-    }}
-  >
-    Delete All Tasks
-  </Button>
-</div>
+                  try {
+                    await deleteAllTasksForUser(user.uid);
+                    setTasks([]); // clear local state
+                  } catch (err) {
+                    console.error("Error deleting all tasks:", err);
+                  }
+                }}
+              >
+                Delete All Tasks
+              </Button>
+            </div>
           </div>
         </div>
       </SidebarInset>
