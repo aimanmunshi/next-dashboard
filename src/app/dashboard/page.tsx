@@ -42,6 +42,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
 import { deleteAllTasksForUser } from "@/lib/firestore-tasks";
+import { CircleEllipsis } from 'lucide-react';
+import { Input } from "@/components/ui/input"
+
 
 export type Task = {
   id: string;
@@ -224,7 +227,7 @@ export default function Page() {
                 <h3 className="text-lg font-semibold">Tasks</h3>
               </div>
               <div className="flex gap-2">
-                <input
+                <Input
                   type="text"
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
@@ -237,7 +240,7 @@ export default function Page() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-36 justify-between"
+                      className="w-20 justify-between"
                     >
                       {newTaskStatus}
                     </Button>
@@ -294,7 +297,7 @@ export default function Page() {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <button className="text-sm text-muted-foreground hover:text-foreground">
-                              <MoreVertical className="h-4 w-4" />
+                              <CircleEllipsis className="h-4 w-4" />
                             </button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
