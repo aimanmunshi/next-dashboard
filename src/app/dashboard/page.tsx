@@ -124,12 +124,18 @@ export default function Page() {
     if (!newTaskTitle.trim() || !user) return;
 
     try {
-      const taskId = await addTask(user.uid, newTaskTitle);
+      const taskId = await addTask(user.uid, newTaskTitle, newTaskStatus); // ✅ pass status here
       setTasks((prev) => [
         ...prev,
-        { id: taskId, uid: user.uid, title: newTaskTitle, status: "Pending" },
+        {
+          id: taskId,
+          uid: user.uid,
+          title: newTaskTitle,
+          status: newTaskStatus, // ✅ use selected value
+        },
       ]);
       setNewTaskTitle("");
+      setNewTaskStatus("Pending"); // optional reset
     } catch (error) {
       console.error("Failed to add task:", error);
     }
@@ -266,7 +272,10 @@ export default function Page() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                <Button onClick={handleAddTask} className="px-2 py-1 text-sm h-9" >
+                <Button
+                  onClick={handleAddTask}
+                  className="px-2 py-1 text-sm h-9"
+                >
                   Add
                 </Button>
               </div>

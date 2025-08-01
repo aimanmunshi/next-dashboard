@@ -24,15 +24,16 @@ export async function getTasks(uid: string): Promise<Task[]> {
 }
 
 // 2️⃣ Add a new task
-export async function addTask(uid: string, title: string): Promise<string> {
+export const addTask = async (uid: string, title: string, status: string) => {
   const docRef = await addDoc(collection(db, "tasks"), {
+    uid,
     title,
     status,
-    uid,
     createdAt: serverTimestamp(),
   });
   return docRef.id;
-}
+};
+
 
 // 3️⃣ Toggle task status
 export async function toggleTaskComplete(taskId: string, newStatus: Task["status"]) {
