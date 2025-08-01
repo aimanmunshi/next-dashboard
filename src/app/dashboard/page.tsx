@@ -68,14 +68,17 @@ export default function Page() {
   >("Pending");
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      const user = getAuth().currentUser;
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const allTasks = await getTasks(user.uid);
-        setTasks(allTasks);
+        const fetchedTasks = await getTasks(user.uid);
+        setTasks(fetchedTasks);
+      } else {
+        setTasks([]); // Clear tasks when user logs out
       }
-    };
-    fetchTasks();
+    });
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
