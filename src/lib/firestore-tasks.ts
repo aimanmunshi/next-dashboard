@@ -46,3 +46,10 @@ export async function toggleTaskComplete(taskId: string, newStatus: Task["status
 export async function deleteTask(taskId: string) {
   await deleteDoc(doc(db, "tasks", taskId));
 }
+
+export async function deleteAllTasksForUser(uid: string) {
+  const q = query(collection(db, "tasks"), where("uid", "==", uid));
+  const snapshot = await getDocs(q);
+  const deletions = snapshot.docs.map((docSnap) => deleteDoc(doc(db, "tasks", docSnap.id)));
+  await Promise.all(deletions);
+}
