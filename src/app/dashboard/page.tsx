@@ -193,7 +193,7 @@ export default function Page() {
         {/* Content */}
         <div className="flex flex-col gap-4 p-4">
           <h1 className="text-2xl font-semibold tracking-tight">
-            Welcome back, {userName} 👋
+            Welcome back, {userName}
           </h1>
           <p className="text-sm text-muted-foreground">
             Here’s a quick overview of your dashboard
@@ -242,7 +242,7 @@ export default function Page() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-20 justify-between"
+                      className="w-25 h-9 justify-between"
                     >
                       {newTaskStatus}
                     </Button>
@@ -266,7 +266,7 @@ export default function Page() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                <Button onClick={handleAddTask} className="px-2 py-1 text-sm">
+                <Button onClick={handleAddTask} className="px-2 py-1 text-sm h-9" >
                   Add
                 </Button>
               </div>
@@ -278,7 +278,7 @@ export default function Page() {
                   <tr className="text-muted-foreground border-b">
                     <th className="py-2 px-3 text-left w-24">Status</th>
                     <th className="py-2 px-3 text-left w-64">Task</th>
-                    <th className="py-2 px-3 text-right">Actions</th>
+                    <th className="py-2 px-3 text-right">Action</th>
                   </tr>
                 </thead>
 
@@ -318,6 +318,7 @@ export default function Page() {
             <div className="text-xs text-muted-foreground mt-3 flex items-center justify-between">
               <span>{tasks.length} task(s) listed.</span>
               <Button
+                className="w-35 h-9"
                 variant="destructive"
                 size="sm"
                 onClick={async () => {
