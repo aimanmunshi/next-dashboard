@@ -18,6 +18,7 @@ import { signInWithRedirect } from "firebase/auth"; // Import for GitHub login
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { saveUserToFirestore } from "@/lib/firestore-helpers"; // 👈 Add this
+import Loader from "@/components/loader"; // Import the Loader component
 
 export function LoginForm({
   className,
@@ -51,48 +52,48 @@ export function LoginForm({
   };
 
   const githubProvider = new GithubAuthProvider();
-githubProvider.setCustomParameters({
-  allow_signup: "false", // optional, prevent new account creation
-  prompt: "consent",      // 👈 forces popup every time
-});
+  githubProvider.setCustomParameters({
+    allow_signup: "false", // optional, prevent new account creation
+    prompt: "consent", // 👈 forces popup every time
+  });
 
   const handleGitHubLogin = async () => {
     try {
-    const result = await signInWithPopup(auth, githubProvider);
-    const token = await result.user.getIdToken();
-    localStorage.setItem("token", token);
+      const result = await signInWithPopup(auth, githubProvider);
+      const token = await result.user.getIdToken();
+      localStorage.setItem("token", token);
 
-    const { uid, email } = result.user;
-    let displayName = result.user.displayName;
+      const { uid, email } = result.user;
+      let displayName = result.user.displayName;
 
-    // ⬇️ Fetch full GitHub profile name using access token
-    const credential = GithubAuthProvider.credentialFromResult(result);
-    const accessToken = credential?.accessToken;
+      // ⬇️ Fetch full GitHub profile name using access token
+      const credential = GithubAuthProvider.credentialFromResult(result);
+      const accessToken = credential?.accessToken;
 
-    if (accessToken) {
-      const response = await fetch("https://api.github.com/user", {
-        headers: {
-          Authorization: `token ${accessToken}`,
-        },
-      });
-      const githubData = await response.json();
+      if (accessToken) {
+        const response = await fetch("https://api.github.com/user", {
+          headers: {
+            Authorization: `token ${accessToken}`,
+          },
+        });
+        const githubData = await response.json();
 
-      // If GitHub name exists, use it instead of fallback
-      if (githubData?.name) {
-        displayName = githubData.name;
+        // If GitHub name exists, use it instead of fallback
+        if (githubData?.name) {
+          displayName = githubData.name;
+        }
       }
-    }
 
-    // ✅ Save correct name & email to Firestore
-    if (email && displayName) {
-      await saveUserToFirestore(uid, displayName, email);
-    }
+      // ✅ Save correct name & email to Firestore
+      if (email && displayName) {
+        await saveUserToFirestore(uid, displayName, email);
+      }
 
-    router.push("/dashboard");
-  } catch (error) {
-    console.error("GitHub login error:", error);
-  }
-};
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("GitHub login error:", error);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,7 +147,6 @@ githubProvider.setCustomParameters({
                 </div>
 
                 <div className="grid gap-3">
-                  
                   <div className="flex items-center"></div>
                   <div className="grid gap-3">
                     <Input

@@ -1,12 +1,21 @@
-import { GalleryVerticalEnd } from "lucide-react";
+"use client";
 
 import { ForgotForm } from "@/components/forgot-form";
+import Pattern from "@/components/pattern"; // Make sure the path is correct
 
-export default function LoginPage() {
+export default function ForgotPage() {
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <ForgotForm />
+    <div className="relative min-h-svh w-full overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 -z-10">
+        <Pattern />
+      </div>
+
+      {/* Forgot Password Form */}
+      <div className="flex min-h-svh items-center justify-center p-6">
+        <div className="w-full max-w-sm z-10">
+          <ForgotForm />
+        </div>
       </div>
     </div>
   );
