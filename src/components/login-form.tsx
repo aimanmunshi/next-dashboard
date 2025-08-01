@@ -136,7 +136,6 @@ export function LoginForm({
 
       <div className={cn("flex flex-col gap-6", className)} {...props}>
         <Card>
-          <CardHeader className="text-center"></CardHeader>
           <CardContent>
             <form onSubmit={handleLogin}>
               <div className="grid gap-6">

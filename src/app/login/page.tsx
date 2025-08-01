@@ -1,6 +1,8 @@
 "use client";
 import { LoginForm } from "@/components/login-form";
 import Pattern from "@/components/pattern"; // adjust path as needed
+import { Headphones } from "lucide-react";
+
 
 export default function LoginPage() {
   return (
