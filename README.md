@@ -47,9 +47,39 @@
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React, Next.js 14, TailwindCSS
-- **Backend/Auth**: Firebase Auth, Firestore
-- **Deployment**: Vercel
-- **Design**: Lucide Icons, custom animations
+### 🧑‍💻 Frontend
+- **React (v18)**: Core UI library used for building reusable components and managing state.
+- **Next.js 14**: React-based full-stack framework with built-in routing, server-side rendering (SSR), and API routes for scalable performance.
+- **Tailwind CSS**: Utility-first CSS framework that enables rapid styling with responsive design support out of the box.
+- **Lucide Icons**: Beautifully designed open-source icons used for visual clarity (e.g. headphones icon for branding).
+
+### 🔐 Backend & Authentication
+- **Firebase Authentication**: Handles secure sign-in via email/password, Google, and GitHub OAuth providers.
+- **Firebase Firestore**: Real-time NoSQL database for storing user tasks and profile information per authenticated session.
+
+### 🚀 Deployment
+- **Vercel**: Seamless deployment platform for Next.js with CI/CD integration. Every push to GitHub auto-triggers a new production build.
+- **GitHub Repository**: Source-controlled with a well-structured commit history and public documentation.
+
+### 🎨 UI/UX Enhancements
+- **Patterned Backgrounds**: Subtle animated backgrounds for login/signup pages using styled-components.
+- **Responsive Design**: Fully mobile-optimized layout with adaptive spacing and typography using Tailwind utilities.
+
+## 🧪 Getting Started
+
+Follow the steps below to clone and run this project locally.
+
+### ✅ Prerequisites
+- Node.js (v18 or higher recommended)
+- npm or yarn
+- Firebase account (if you want to connect your own project)
+
+---
+
+### 📥 1. Clone the Repository
+```bash
+git clone https://github.com/aimanmunshi/next-dashboard.git
+cd next-dashboard
+
 
 
