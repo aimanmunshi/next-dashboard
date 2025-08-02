@@ -1,19 +1,24 @@
-# Next.js Dashboard
+# 🎧 AIM-Dashboard
 
-A sleek and modular dashboard application built with **Next.js 14**, **Tailwind CSS**, and **ShadCN UI**.  
-Authentication is handled through **Firebase** with email/password and OAuth providers like Google and GitHub.
+A modern and responsive dashboard application built with **Next.js**, **Firebase Auth**, **Firestore**, and **TailwindCSS**. Deployed on **Vercel**.
 
----
+## ✨ Features
 
-### 🚀 Features
+- 🔐 Firebase Authentication (Email, Google, GitHub)
+- 📋 Task Management with real-time updates
+- 🎨 Dark-themed animated login/signup pages
+- 🧩 Modular components (Button, Dropdown, Pattern, Loader)
+- 🚀 Deployed and production-ready
 
-- 🔐 Firebase Auth with email, Google, and GitHub login
-- 🎨 Light/Dark Mode toggle
-- 📱 Responsive sidebar navigation
-- ⚙️ Scalable file and folder structure
-- 🌱 Built with future integrations in mind
+## 📸 Screenshots
+![Login Page](./screenshots/login.png)
+![Dashboard](./screenshots/dashboard.png)
 
----
+## 🛠️ Tech Stack
 
-> This project is under active development. More features coming soon!
+- **Frontend**: React, Next.js 14, TailwindCSS
+- **Backend/Auth**: Firebase Auth, Firestore
+- **Deployment**: Vercel
+- **Design**: Lucide Icons, custom animations
+
 
