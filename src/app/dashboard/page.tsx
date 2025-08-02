@@ -239,7 +239,7 @@ export default function Page() {
                   type="text"
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
-                  className="text-sm rounded-md border px-3 py-1 bg-background text-foreground"
+                  className="text-sm rounded-md border px-3 py-1 bg-background text-foreground w-25"
                   placeholder="New task"
                 />
 
