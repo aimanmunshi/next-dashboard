@@ -11,8 +11,13 @@ A modern and responsive dashboard application built with **Next.js**, **Firebase
 - 🚀 Deployed and production-ready
 
 ## 📸 Screenshots
+
+### 🔐 Login Page
 ![Login Page](./screenshots/login.png)
+
+### 📊 Dashboard
 ![Dashboard](./screenshots/dashboard.png)
+
 
 ## 🛠️ Tech Stack
 
